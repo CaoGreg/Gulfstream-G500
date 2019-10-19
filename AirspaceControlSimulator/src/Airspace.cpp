@@ -9,10 +9,17 @@ Airspace::Airspace(){
 	this->maxZ = 40000;
 }
 
-bool Airspace::isInAirspace(double x, double y, double z){
+bool Airspace::isInAirspace(Aircraft a){
 	bool result = false;
-	if(x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ){
+	if(a.getPositionX() >= minX && a.getPositionX() <= maxX && a.getPositionY() >= minY
+			&& a.getPositionY() <= maxY && a.getPositionZ() >= minZ && a.getPositionZ() <= maxZ){
 		result = true;
 	}
 	return result;
 }
+
+std::vector<Aircraft> Airspace::getAircrafts(){
+	//todo fix this thing
+	return aircrafts;
+}
+

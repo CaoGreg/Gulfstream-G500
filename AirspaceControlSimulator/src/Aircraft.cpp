@@ -11,6 +11,8 @@ Aircraft::Aircraft(int id, int x, int y, int z, int velX,int velY, int velZ){
 	this->prevX = 0;
 	this->prevY = 0;
 	this->prevZ = 0;
+	this->prevTimeStamp = 0;
+	this->timeStamp = 0;
 }
 
 void Aircraft::updatePosition(int newX, int newY, int newZ, double time){

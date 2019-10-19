@@ -1,13 +1,14 @@
-#ifndef AIRSPACE_
-#define AIRSPACE_
-
-#endif /*AIRSPACE_*/
+#pragma once
+#include <vector>
+#include "Aircraft.h"
+using namespace std;
 
 class Airspace
 {
 	public:
 		Airspace();
-		bool isInAirspace(double x, double y, double z);
+		std::vector<Aircraft> getAircrafts();
+		bool isInAirspace(Aircraft a);
 	private:		
 		double maxX; //miles
 		double minX;
@@ -15,5 +16,6 @@ class Airspace
 		double minY;	
 		double maxZ; //feet
 		double minZ; //elevation	
+		std::vector<Aircraft> aircrafts;
 };
 

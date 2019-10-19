@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
 	int x = 100;
 	int y = 20;
 	int z = 40000;
+	Aircraft aircraft = Aircraft(x,y,z,0,0,0,0);
 
-	cout<<airspace.isInAirspace(x,y,z);
+	cout<<airspace.isInAirspace(aircraft);
 	return EXIT_SUCCESS;
 }

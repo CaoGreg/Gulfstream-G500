@@ -1,7 +1,4 @@
-#ifndef AIRCRAFT_H_
-#define AIRCRAFT_H_
-
-#endif /*AIRCRAFT_H_*/
+#pragma once
 
 class Aircraft
 {
@@ -10,7 +7,7 @@ class Aircraft
 		void updatePosition(int newX,int newY, int newZ, double time);
 		int getPositionX();
 		int getPositionY();
-		int getPositionZ();		
+		int getPositionZ();
 	private:
 		//id
 		int id;
