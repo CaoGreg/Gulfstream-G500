@@ -22,4 +22,22 @@ std::vector<Aircraft> Airspace::getAircrafts(){
 	//todo fix this thing
 	return aircrafts;
 }
+void Airspace::updateTime(){
+	//uint64 prevTime = 0;
+	//if()
 
+}
+void Airspace::updatePositions(double time, double timeVariation){
+	for(Aircraft& aircraft : aircrafts){
+		if(aircraft.isHolding()){
+			//todo update values for holding aircraft
+		}
+		else{
+			aircraft.updatePosition(time, timeVariation);
+		}
+	}
+}
+
+void Airspace::getEnteringAircrafts(){
+	//todo check for aircrafts at the given time
+}

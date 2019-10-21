@@ -9,6 +9,7 @@ class Airspace
 		Airspace();
 		std::vector<Aircraft> getAircrafts();
 		bool isInAirspace(Aircraft a);
+
 	private:		
 		double maxX; //miles
 		double minX;
@@ -17,5 +18,8 @@ class Airspace
 		double maxZ; //feet
 		double minZ; //elevation	
 		std::vector<Aircraft> aircrafts;
+		void updateTime();
+		void updatePositions(double time, double timeVariation);
+		void getEnteringAircrafts();
 };
 

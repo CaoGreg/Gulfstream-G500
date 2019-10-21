@@ -33,7 +33,7 @@ public:
 	19, 194, 184, 598, 35000, 0, 2000, 221,
 	};
 
-	TestCase();
+	TestCase(){}
 };
 
 #endif /* TESTCASE_H_ */

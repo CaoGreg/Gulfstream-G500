@@ -13,9 +13,11 @@ Aircraft::Aircraft(int id, int x, int y, int z, int velX,int velY, int velZ){
 	this->prevZ = 0;
 	this->prevTimeStamp = 0;
 	this->timeStamp = 0;
+	this->holding = false;
+	this->radius = 0;
 }
 
-void Aircraft::updatePosition(int newX, int newY, int newZ, double time){
+void Aircraft::updatePosition(double time, double timeVariation){
 	
 	this->prevX = x;
 	this->prevY = y;
@@ -23,9 +25,9 @@ void Aircraft::updatePosition(int newX, int newY, int newZ, double time){
 	this->prevTimeStamp = this->timeStamp;
 	
 	//update the position and the timestamp
-	this->x = newX;
-	this->y = newY;
-	this->z = newZ;
+	this->x = this->velX * timeVariation;
+	this->y = this->velY * timeVariation;
+	this->z = this->velZ * timeVariation;
 	this->timeStamp = time;	
 }
 
@@ -39,4 +41,17 @@ int Aircraft::getPositionY(){
 
 int Aircraft::getPositionZ(){
 	return this->z;
+}
+
+void Aircraft::hold(double radius){
+	this->radius = radius;
+	this->holding = true;
+}
+
+bool Aircraft::isHolding(){
+	return this->holding;
+}
+
+void Aircraft::stopHolding(){
+	this->holding = false;
 }
