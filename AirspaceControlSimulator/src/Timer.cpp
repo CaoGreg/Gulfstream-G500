@@ -1,8 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer(){
-	this->paused = false;
-}
+Timer* Timer::timer = nullptr;
 
 int Timer::getCurrentTime(){
 	return currentTime;
@@ -25,3 +23,4 @@ void Timer::pause(){
 bool Timer::isPaused(){
 	return this->paused;
 }
+

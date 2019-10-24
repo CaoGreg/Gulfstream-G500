@@ -10,14 +10,22 @@
 
 class Timer{
 	public:
-		Timer();
+		Timer(){
+			this->paused = false;
+			currentTime = 0;
+		}
+
+		~Timer(){ delete timer; }
+
+		static void createInstance(){ timer = new Timer(); }
+		static Timer* getTimer(){ return timer;	}
 		int getCurrentTime();
 		void updateTimer(double time);
 		void pause();
 		void unpause();
 		bool isPaused();
-
 	private:
+		static Timer* timer;
 		bool paused;
 		int currentTime;
 };

@@ -1,20 +1,27 @@
+#include "Airspace.h"
+#include "Radar.h"
+#include "Timer.h"
+
 #include <cstdlib>
 #include <iostream>
-#include "Airspace.h"
 #include <time.h>
 #include <sys/siginfo.h>
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	//ATC* atc = new ATC();
-	//timer_create(1,)
-	Airspace airspace = Airspace();
-	int x = 100;
-	int y = 20;
-	int z = 40000;
-	Aircraft aircraft = Aircraft(x,y,z,0,0,0,0);
+	//initialize the objects
+	Airspace* airspace = new Airspace();
+	Radar* radar = new Radar();
+	Timer* timer = new Timer();
 
-	cout<<airspace.isInAirspace(aircraft);
+	//todo create threads
+	cout<<"hello there";
+
+	//destroy the objects
+	delete airspace;
+	delete radar;
+	delete timer;
+
 	return EXIT_SUCCESS;
 }

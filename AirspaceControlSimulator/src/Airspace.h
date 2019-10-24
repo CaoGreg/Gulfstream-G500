@@ -17,7 +17,8 @@ class Airspace
 		double minY;	
 		double maxZ; //feet
 		double minZ; //elevation	
-		std::vector<Aircraft> aircrafts;
+		std::vector<Aircraft> current_aircrafts;
+		std::vector<Aircraft> incoming_aircrafts;
 		void updateTime();
 		void updatePositions(double time, double timeVariation);
 		void getEnteringAircrafts();

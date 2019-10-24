@@ -1,6 +1,5 @@
 #include "Radar.h"
 
-
 vector<Aircraft> Radar::scan(){
 	TestCase* testCase = new TestCase();
 	int size = sizeof(testCase->airplane_schedule);

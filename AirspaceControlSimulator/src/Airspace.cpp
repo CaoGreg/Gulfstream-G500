@@ -1,4 +1,5 @@
 #include "Airspace.h"
+#include "Timer.h"
 
 Airspace::Airspace(){
 	this->minX = 0;
@@ -20,7 +21,7 @@ bool Airspace::isInAirspace(Aircraft a){
 
 std::vector<Aircraft> Airspace::getAircrafts(){
 	//todo fix this thing
-	return aircrafts;
+	return current_aircrafts;
 }
 void Airspace::updateTime(){
 	//uint64 prevTime = 0;
@@ -28,7 +29,7 @@ void Airspace::updateTime(){
 
 }
 void Airspace::updatePositions(double time, double timeVariation){
-	for(Aircraft& aircraft : aircrafts){
+	for(Aircraft& aircraft : current_aircrafts){
 		if(aircraft.isHolding()){
 			//todo update values for holding aircraft
 		}
@@ -40,4 +41,6 @@ void Airspace::updatePositions(double time, double timeVariation){
 
 void Airspace::getEnteringAircrafts(){
 	//todo check for aircrafts at the given time
+	int time = Timer::getTimer()->getCurrentTime();
+	//todo add aircrats
 }
