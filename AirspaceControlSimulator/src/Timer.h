@@ -15,7 +15,7 @@ class Timer{
 			currentTime = 0;
 		}
 
-		~Timer(){ delete timer; }
+		virtual ~Timer(){ delete timer; }
 
 		static void createInstance(){ timer = new Timer(); }
 		static Timer* getTimer(){ return timer;	}

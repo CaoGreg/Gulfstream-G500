@@ -7,10 +7,15 @@ class Airspace
 {
 	public:
 		Airspace();
+		virtual ~Airspace(){ delete airspace; }
+		static void createInstance(){airspace = new Airspace(); }
+		static Airspace* getAirspace(){ return airspace; }
 		std::vector<Aircraft> getAircrafts();
 		bool isInAirspace(Aircraft a);
 
 	private:		
+		static Airspace* airspace;
+
 		double maxX; //miles
 		double minX;
 		double maxY; //miles

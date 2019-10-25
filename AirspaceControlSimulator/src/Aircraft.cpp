@@ -31,16 +31,28 @@ void Aircraft::updatePosition(double time, double timeVariation){
 	this->timeStamp = time;	
 }
 
-int Aircraft::getPositionX(){
+double Aircraft::getPositionX(){
 	return this->x;
 }
 
-int Aircraft::getPositionY(){
+double Aircraft::getPositionY(){
 	return this->y;
 }
 
-int Aircraft::getPositionZ(){
+double Aircraft::getPositionZ(){
 	return this->z;
+}
+
+void Aircraft::setPositionX(double x){
+	this->x = x;
+}
+
+void Aircraft::setPositionY(double y){
+	this->y = y;
+}
+
+void Aircraft::setPositionZ(double z){
+	this->z = z;
 }
 
 void Aircraft::hold(double radius){
@@ -54,4 +66,8 @@ bool Aircraft::isHolding(){
 
 void Aircraft::stopHolding(){
 	this->holding = false;
+}
+
+int Aircraft::getId(){
+	return this->id;
 }

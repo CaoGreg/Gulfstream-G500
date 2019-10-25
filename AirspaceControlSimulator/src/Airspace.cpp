@@ -1,6 +1,8 @@
 #include "Airspace.h"
 #include "Timer.h"
 
+Airspace* Airspace::airspace = nullptr;
+
 Airspace::Airspace(){
 	this->minX = 0;
 	this->maxX = 100;
@@ -24,8 +26,7 @@ std::vector<Aircraft> Airspace::getAircrafts(){
 	return current_aircrafts;
 }
 void Airspace::updateTime(){
-	//uint64 prevTime = 0;
-	//if()
+	//update time in airspace
 
 }
 void Airspace::updatePositions(double time, double timeVariation){
