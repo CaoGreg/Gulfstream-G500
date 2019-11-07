@@ -1,7 +1,7 @@
 #include "Airspace.h"
 #include "Timer.h"
 
-Airspace* Airspace::airspace = nullptr;
+Airspace* Airspace::airspace = NULL;
 
 Airspace::Airspace(){
 	this->minX = 0;
@@ -30,14 +30,14 @@ void Airspace::updateTime(){
 
 }
 void Airspace::updatePositions(double time, double timeVariation){
-	for(Aircraft& aircraft : current_aircrafts){
-		if(aircraft.isHolding()){
-			//todo update values for holding aircraft
-		}
-		else{
-			aircraft.updatePosition(time, timeVariation);
-		}
-	}
+//	for(Aircraft& aircraft : current_aircrafts){
+//		if(aircraft.isHolding()){
+//			//todo update values for holding aircraft
+//		}
+//		else{
+//			aircraft.updatePosition(time, timeVariation);
+//		}
+//	}
 }
 
 void Airspace::getEnteringAircrafts(){

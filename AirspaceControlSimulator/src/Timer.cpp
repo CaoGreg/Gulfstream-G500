@@ -2,7 +2,7 @@
 
 Timer* Timer::timer = nullptr;
 
-int Timer::getCurrentTime(){
+double Timer::getCurrentTime(){
 	return currentTime;
 }
 

@@ -8,18 +8,20 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
+#include <cstddef>
+
 class Timer{
 	public:
 		Timer(){
 			this->paused = false;
-			currentTime = 0;
+			this->currentTime = 0;
 		}
 
 		virtual ~Timer(){ delete timer; }
 
 		static void createInstance(){ timer = new Timer(); }
 		static Timer* getTimer(){ return timer;	}
-		int getCurrentTime();
+		double getCurrentTime();
 		void updateTimer(double time);
 		void pause();
 		void unpause();
@@ -27,7 +29,7 @@ class Timer{
 	private:
 		static Timer* timer;
 		bool paused;
-		int currentTime;
+		double currentTime;
 };
 
 

@@ -8,16 +8,19 @@
 #include "Airspace.h"
 #include <string>
 #include <vector>
-using namespace std;
+//using namespace std;
 #ifndef OPERATOR_H_
 #define OPERATOR_H_
 
 class Operator{
 public:
 	Operator();
-	virtual ~Operator();
+		
+	virtual ~Operator(){ delete operater; }
 
+	static void createInstance(){ operater = new Operator(); }
 	//commands for a given aircraft
+	static Operator* getOperator(){ return operater; }
 	void setAltitude(int aircraftId, double elevationChange);
 	void setSpeed(int aircraftId, double speed);
 	void setDirection(int aircraftId,int x, int y, int z);
@@ -42,7 +45,7 @@ public:
 	bool checkViolations();
 	bool hasCollisions(int id1, int id2);
 private:
-
+	static Operator* operater; //operator is a keyword
 };
 
 

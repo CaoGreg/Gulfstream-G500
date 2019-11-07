@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Aircraft.h"
+#include <iostream>
 using namespace std;
 
 class Airspace
@@ -12,6 +13,7 @@ class Airspace
 		static Airspace* getAirspace(){ return airspace; }
 		std::vector<Aircraft> getAircrafts();
 		bool isInAirspace(Aircraft a);
+		void update(){std::cout<<"Update airspace"<<endl;}
 
 	private:		
 		static Airspace* airspace;
