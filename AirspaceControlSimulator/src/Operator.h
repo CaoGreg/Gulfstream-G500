@@ -33,6 +33,7 @@ public:
 	void deleteAircraft(int id);
 	//some vector getProjectedPosition(int id, double n); get projected postion funtion must make a vector class
 	//get all aircraft
+	void update();
 
 	//computer commands
 	void send(int id,string message);

@@ -9,6 +9,8 @@
 #define TIMER_H_
 
 #include <cstddef>
+#include <iostream>
+using namespace std;
 
 class Timer{
 	public:

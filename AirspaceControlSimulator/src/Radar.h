@@ -15,6 +15,8 @@ class Radar{
 		
 		static void createInstance(){ radar = new Radar(); }
 		static Radar* getRadar(){ return radar;	}
+		std::vector<Aircraft> scan();
+		void update();
 
 	private:
 		std::vector<Aircraft> hits;

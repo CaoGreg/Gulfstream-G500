@@ -2,6 +2,7 @@
 #define LOG_H_
 
 #include <cstddef>
+#include <iostream>
 
 class Log{
 	public:
@@ -11,6 +12,7 @@ class Log{
 		
 		static void createInstance(){ log = new Log(); }
 		static Log* getLog(){ return log;	}
+		void update();
 
 	private:
 		static Log* log;

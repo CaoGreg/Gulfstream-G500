@@ -45,12 +45,61 @@ int main(int argc, char *argv[]) {
 	airspaceTask.func = []() {
 		Airspace::getAirspace()->update();
 	};
+	//Airspace::getAirspace()->update();
 
-	Airspace::getAirspace()->update();
+	//Task to update the radar
+	Task radarTask;
+	radarTask.priority = 253;
+	radarTask.period = 500000000; //0.5sec
+	radarTask.func = []() {
+		Radar::getRadar()->update();
+	};
+
+	//Task to update the timer
+	Task timerTask;
+	timerTask.priority = 252;
+	timerTask.period = 500000000; //0.5sec
+	timerTask.func = []() {
+		Timer::getTimer()->updateTimer(3);
+	};
+
+	//Task to update the operator
+	Task operatorTask;
+	operatorTask.priority = 251;
+	operatorTask.period = 500000000; //0.5sec
+	operatorTask.func = []() {
+		Operator::getOperator()->update();
+	};
+	//Task to update the log
+	Task logTask;
+	logTask.priority = 250;
+	logTask.period = 500000000; //0.5sec
+	logTask.func = []() {
+		Log::getLog()->update();
+	};
+	//Task to update the track file
+	Task trackFileTask;
+	trackFileTask.priority = 249;
+	trackFileTask.period = 500000000; //0.5sec
+	trackFileTask.func = []() {
+		TrackFile::getTrackFile()->update();
+	};
+
+
+
 	pthread_t airspaceThread = startTask(airspaceTask);
+	pthread_t radarThread = startTask(radarTask);
+	pthread_t timerThread = startTask(timerTask);
+	//pthread_t operatorThread = startTask(operatorTask);
+	//pthread_t logThread = startTask(logTask);
+	//pthread_t trackFileThread = startTask(trackFileTask);
 	
-	
-	pthread_join(airspaceThread, NULL);
+	pthread_join(airspaceThread, nullptr);
+	pthread_join(radarThread, nullptr);
+	pthread_join(timerThread, nullptr);
+	//pthread_join(operatorThread, nullptr);
+	//pthread_join(logThread, nullptr);
+	//pthread_join(trackFileThread, nullptr);
 
 	return EXIT_SUCCESS;
 }

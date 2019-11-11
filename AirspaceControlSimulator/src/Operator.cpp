@@ -94,3 +94,6 @@ bool hasCollisions(int id1, int id2){
 	return true;
 }
 
+void Operator::update(){
+	cout<<"operator thread"<<endl;
+}

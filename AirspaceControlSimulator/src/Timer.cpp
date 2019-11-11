@@ -10,6 +10,7 @@ void Timer::updateTimer(double time){
 	if(!this->paused){
 		currentTime += time;
 	}
+	cout<<"timer thread"<<endl;
 }
 
 void Timer::unpause(){
