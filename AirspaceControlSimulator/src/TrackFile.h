@@ -13,7 +13,7 @@ class TrackFile{
 		
 		static void createInstance(){ trackfile = new TrackFile(); }
 		static TrackFile* getTrackFile(){ return trackfile;	}
-		void update();
+		void update(){cout<<"update track file"<<endl;};
 
 	private:
 		static TrackFile* trackfile;

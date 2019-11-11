@@ -90,16 +90,16 @@ int main(int argc, char *argv[]) {
 	pthread_t airspaceThread = startTask(airspaceTask);
 	pthread_t radarThread = startTask(radarTask);
 	pthread_t timerThread = startTask(timerTask);
-	//pthread_t operatorThread = startTask(operatorTask);
-	//pthread_t logThread = startTask(logTask);
-	//pthread_t trackFileThread = startTask(trackFileTask);
+	pthread_t operatorThread = startTask(operatorTask);
+	pthread_t logThread = startTask(logTask);
+	pthread_t trackFileThread = startTask(trackFileTask);
 	
 	pthread_join(airspaceThread, nullptr);
 	pthread_join(radarThread, nullptr);
 	pthread_join(timerThread, nullptr);
-	//pthread_join(operatorThread, nullptr);
-	//pthread_join(logThread, nullptr);
-	//pthread_join(trackFileThread, nullptr);
+	pthread_join(operatorThread, nullptr);
+	pthread_join(logThread, nullptr);
+	pthread_join(trackFileThread, nullptr);
 
 	return EXIT_SUCCESS;
 }
@@ -139,7 +139,7 @@ void* startRoutine(void* arg) {
 	uint64_t endTime = 0;
 	ClockTime(CLOCK_MONOTONIC, NULL, &phase);
 	int deadline =  phase;
-	while(true) {
+	//while(true) {
 		deadline += task->period;
 		ClockTime(CLOCK_MONOTONIC, NULL, &startTime);
 		task->func();
@@ -149,8 +149,8 @@ void* startRoutine(void* arg) {
 		timeSpecification.tv_sec = slack * 1000000000;
 		timeSpecification.tv_nsec = slack % 1000000000;
 		nanosleep(&timeSpecification, NULL);	
-	}
-	return NULL;	
+	//}
+	return nullptr;
 }
 
 //pthread_t setupThread(int priority, int period){

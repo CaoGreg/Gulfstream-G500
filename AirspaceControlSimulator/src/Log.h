@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <iostream>
+using namespace std;
 
 class Log{
 	public:
@@ -12,7 +13,7 @@ class Log{
 		
 		static void createInstance(){ log = new Log(); }
 		static Log* getLog(){ return log;	}
-		void update();
+		void update(){cout<<"log thread"<<endl;}
 
 	private:
 		static Log* log;
