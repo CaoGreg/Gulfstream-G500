@@ -3,17 +3,20 @@
 
 #include <cstddef>
 #include <iostream>
+#include <fstream>
+#include "Airspace.h"
+#include "Timer.h"
 using namespace std;
 
 class TrackFile{
 	public:
-		TrackFile(){}
+		TrackFile();
 		
 		virtual ~TrackFile() { delete trackfile; } 
 		
 		static void createInstance(){ trackfile = new TrackFile(); }
 		static TrackFile* getTrackFile(){ return trackfile;	}
-		void update(){cout<<"update track file"<<endl;};
+		void update();
 
 	private:
 		static TrackFile* trackfile;
