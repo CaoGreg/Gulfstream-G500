@@ -1,7 +1,6 @@
 #ifndef TRACKFILE_H_
 #define TRACKFILE_H_
 
-#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include "Airspace.h"

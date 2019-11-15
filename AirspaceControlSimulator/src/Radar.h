@@ -3,22 +3,23 @@
 #include "Aircraft.h"
 #include "Airspace.h"
 #include "Testcase.h"
+#include "Operator.h"
+#include "Timer.h"
 #include <vector>
 #include <cstddef>
 
 class Radar{
 	public:
 		//std::vector<Aircraft> scan(){return NULL};
-		Radar(){}
-		
+		Radar(){};
 		virtual ~Radar() { delete radar; } 
 		
 		static void createInstance(){ radar = new Radar(); }
 		static Radar* getRadar(){ return radar;	}
-		std::vector<Aircraft*> scan();
+		void scan();
 		void update();
 
 	private:
-		std::vector<Aircraft*> hits;
 		static Radar* radar;
+		std::vector<Aircraft*> scanned_aircrafts; //hits, current planes in the airspace
 };

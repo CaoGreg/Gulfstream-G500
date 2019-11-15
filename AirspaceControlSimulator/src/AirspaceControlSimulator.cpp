@@ -24,7 +24,6 @@ pthread_t startTask(Task& task);
 void* startRoutine(void* arg);
 
 int main(int argc, char *argv[]) {
-
 	init();
 
 	cout<<"Starting simulation" << std::endl;
@@ -84,22 +83,31 @@ int main(int argc, char *argv[]) {
 	trackFileTask.func = []() {
 		TrackFile::getTrackFile()->update();
 	};
+	//Task for the sporadic events
+		Task sporadicTask;
+		sporadicTask.priority = 249;
+		sporadicTask.period = 500000000; //0.5sec
+		sporadicTask.func = []() {
+
+		};
 
 
-	while(Timer::getTimer()->getCurrentTime() < 200){
+	Airspace* airspace = Airspace::getAirspace();
+
+	while(!airspace->getIncomingAircrafts().empty() || !airspace->getCurrentAircrafts().empty()){
 		pthread_t timerThread = startTask(timerTask);
 		pthread_t airspaceThread = startTask(airspaceTask);
-		//pthread_t radarThread = startTask(radarTask);
-		/*pthread_t operatorThread = startTask(operatorTask);
-	pthread_t logThread = startTask(logTask);*/
-		pthread_t trackFileThread = startTask(trackFileTask);
+		pthread_t radarThread = startTask(radarTask);
+		pthread_t operatorThread = startTask(operatorTask);
+		pthread_t logThread = startTask(logTask);
+		//pthread_t trackFileThread = startTask(trackFileTask);
 
 		pthread_join(airspaceThread, nullptr);
-		//pthread_join(radarThread, nullptr);
+		pthread_join(radarThread, nullptr);
 		pthread_join(timerThread, nullptr);
-		/*pthread_join(operatorThread, nullptr);
-	pthread_join(logThread, nullptr);*/
-		pthread_join(trackFileThread, nullptr);
+		pthread_join(operatorThread, nullptr);
+		pthread_join(logThread, nullptr);
+		//pthread_join(trackFileThread, nullptr);
 	}
 	return EXIT_SUCCESS;
 }
