@@ -9,12 +9,17 @@
 
 #include "Aircraft.h"
 #include "Airspace.h"
+#include "DisplayManager.h"
 #include <string>
 #include <vector>
 #include <string>
 #include <cstdlib>
 #include <math.h>
 #include <cmath>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
 using namespace std;
 
 class Operator{
@@ -44,6 +49,8 @@ public:
 	//computer commands
 	void send(int id,string message);
 	void broadcast(string message);
+	void read_value();
+	void timedInput();
 
 	void setHitList(vector<Aircraft*> hits);
 
@@ -54,6 +61,8 @@ public:
 private:
 	static Operator* operater; //operator is a keyword
 	vector<Aircraft*> hitsList;
+	int choice;
+	condition_variable cv;
 };
 
 #endif /* OPERATOR_H_ */

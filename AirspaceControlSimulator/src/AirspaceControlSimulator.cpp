@@ -5,6 +5,7 @@
 #include "Log.h"
 #include "TrackFile.h"
 #include "Task.h"
+#include "DisplayManager.h"
 
 #include <cstdlib>
 #include <cstdint>
@@ -83,12 +84,12 @@ int main(int argc, char *argv[]) {
 	trackFileTask.func = []() {
 		TrackFile::getTrackFile()->update();
 	};
-	//Task for the sporadic events
-		Task sporadicTask;
-		sporadicTask.priority = 249;
-		sporadicTask.period = 500000000; //0.5sec
-		sporadicTask.func = []() {
-
+	//Task for the display
+		Task displayTask;
+		displayTask.priority = 249;
+		displayTask.period = 500000000; //0.5sec
+		displayTask.func = []() {
+			DisplayManager::getDisplayManager()->update();
 		};
 
 
@@ -100,6 +101,7 @@ int main(int argc, char *argv[]) {
 		pthread_t radarThread = startTask(radarTask);
 		pthread_t operatorThread = startTask(operatorTask);
 		pthread_t logThread = startTask(logTask);
+		pthread_t displayThread = startTask(displayTask);
 		//pthread_t trackFileThread = startTask(trackFileTask);
 
 		pthread_join(airspaceThread, nullptr);
@@ -107,6 +109,7 @@ int main(int argc, char *argv[]) {
 		pthread_join(timerThread, nullptr);
 		pthread_join(operatorThread, nullptr);
 		pthread_join(logThread, nullptr);
+		pthread_join(displayThread, nullptr);
 		//pthread_join(trackFileThread, nullptr);
 	}
 	return EXIT_SUCCESS;
@@ -121,6 +124,7 @@ void init(){
 	Operator::createInstance();
 	Log::createInstance();
 	TrackFile::createInstance();
+	DisplayManager::createInstance();
 }
 
 pthread_t startTask(Task& task) {

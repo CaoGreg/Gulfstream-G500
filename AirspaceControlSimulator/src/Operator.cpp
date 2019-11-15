@@ -9,7 +9,7 @@
 Operator* Operator::operater = nullptr;
 
 Operator::Operator(){
-	
+
 }
 
 void Operator::setHitList(vector<Aircraft*> aircraftHits){
@@ -120,10 +120,10 @@ Aircraft* Operator::predictPath(int id, double projectedTime){
 	//TODO predict position of the aircraft given the time
 	Aircraft* futureAircraft;
 	for(Aircraft* aircraft : hitsList){
-			if(id == aircraft->getId()){
-				futureAircraft = aircraft;
-			}
+		if(id == aircraft->getId()){
+			futureAircraft = aircraft;
 		}
+	}
 	if(futureAircraft != nullptr)
 		futureAircraft->updatePosition(projectedTime);
 	return futureAircraft;
@@ -145,7 +145,7 @@ bool Operator::checkViolations(double projectedTime){
 				}
 			}
 		}
-			//TODO add to list of danger
+		//TODO add to list of danger
 	}
 	return violation;
 }
@@ -155,19 +155,37 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
 	//check elevation distance
 	if(abs(aircraft1->getPositionZ() - aircraft2->getPositionZ()) <= 1000.0){
 		collisionRisk = true;
-		cout<<"Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in elevation at " + to_string(projectedTime)<<endl;
+		DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in elevation at " + to_string(projectedTime) + "\n");
 	}
 	//check the distance between the aircrafts
 	if(sqrt(pow((aircraft1->getPositionX()-aircraft2->getPositionX()),2) + pow((aircraft1->getPositionY()-aircraft2->getPositionY()),2)) <= 15840){
 		collisionRisk = true;
-		cout<<"Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in horizontal distance at " + to_string(projectedTime)<<endl;
+		DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in horizontal distance at " + to_string(projectedTime) + "\n");
 	}
 	return collisionRisk;
 }
 
+/*void Operator::read_value(){
+	cin >> choice;
+	cv.notify_one();
+}
 
+void Operator::timedInput(){
+	cout << "\nPlease enter the input:";
+	thread th(&Operator::read_value, this);
+	mutex mtx;
+	unique_lock<mutex> lck(mtx);
+	if(cv.wait_for(lck, chrono::seconds(5)) == cv_status::timeout){
+		cout << "\nTime-Out: 5 second:";
+		cout << "\nYou did not input NOOOOOOOB!";
+	}
+	cout << "\nYou entered: " << choice << '\n';
+
+	th.join();
+}*/
 
 void Operator::update(){
 	cout<<"operator thread"<<endl;
 	checkViolations(6.0);
+	//timedInput();
 }
