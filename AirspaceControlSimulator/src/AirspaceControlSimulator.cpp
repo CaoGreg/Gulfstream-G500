@@ -24,11 +24,11 @@ pthread_t startTask(Task& task);
 void* startRoutine(void* arg);
 
 int main(int argc, char *argv[]) {
-	
+
 	init();
 
 	cout<<"Starting simulation" << std::endl;
-	
+
 	//Set up the parameters of the threads and use a FIFO scheduling
 	sched_param params;
 	int policy;
@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
 	params.sched_priority = 255;
 	policy = SCHED_FIFO;
 	pthread_setschedparam(pthread_self(), policy, &params);
-	
-	
+
+
 	//Task to update the airspace
 	Task airspaceTask;
 	airspaceTask.priority = 254;
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 	timerTask.priority = 252;
 	timerTask.period = 500000000; //0.5sec
 	timerTask.func = []() {
-		Timer::getTimer()->updateTimer(3);
+		Timer::getTimer()->updateTimer(1);
 	};
 
 	//Task to update the operator
@@ -86,25 +86,25 @@ int main(int argc, char *argv[]) {
 	};
 
 
+	while(Timer::getTimer()->getCurrentTime() < 200){
+		pthread_t timerThread = startTask(timerTask);
+		pthread_t airspaceThread = startTask(airspaceTask);
+		//pthread_t radarThread = startTask(radarTask);
+		/*pthread_t operatorThread = startTask(operatorTask);
+	pthread_t logThread = startTask(logTask);*/
+		pthread_t trackFileThread = startTask(trackFileTask);
 
-	pthread_t airspaceThread = startTask(airspaceTask);
-	pthread_t radarThread = startTask(radarTask);
-	pthread_t timerThread = startTask(timerTask);
-	pthread_t operatorThread = startTask(operatorTask);
-	pthread_t logThread = startTask(logTask);
-	pthread_t trackFileThread = startTask(trackFileTask);
-	
-	pthread_join(airspaceThread, nullptr);
-	pthread_join(radarThread, nullptr);
-	pthread_join(timerThread, nullptr);
-	pthread_join(operatorThread, nullptr);
-	pthread_join(logThread, nullptr);
-	pthread_join(trackFileThread, nullptr);
-
+		pthread_join(airspaceThread, nullptr);
+		//pthread_join(radarThread, nullptr);
+		pthread_join(timerThread, nullptr);
+		/*pthread_join(operatorThread, nullptr);
+	pthread_join(logThread, nullptr);*/
+		pthread_join(trackFileThread, nullptr);
+	}
 	return EXIT_SUCCESS;
 }
 
-	//initialize the objects
+//initialize the objects
 void init(){
 	cout<<"Initializing simulation objects" << std::endl;
 	Airspace::createInstance();
@@ -118,23 +118,23 @@ void init(){
 pthread_t startTask(Task& task) {
 	sched_param schedParams;
 	schedParams.sched_priority = task.priority;
-	
+
 	pthread_attr_t attributes;
 	pthread_attr_init(&attributes);
 	pthread_attr_setschedparam(&attributes, &schedParams);
-	
+
 	pthread_t thread;
 	pthread_create(&thread, &attributes, startRoutine, &task);
-	
+
 	pthread_attr_destroy(&attributes);
-	
+
 	return thread;
 }
 
 void* startRoutine(void* arg) {
 	const Task* task = reinterpret_cast<const Task*>(arg);
-	
-	uint64_t phase = 0;
+
+	/*uint64_t phase = 0;
 	uint64_t startTime = 0;
 	uint64_t endTime = 0;
 	ClockTime(CLOCK_MONOTONIC, NULL, &phase);
@@ -149,7 +149,8 @@ void* startRoutine(void* arg) {
 		timeSpecification.tv_sec = slack * 1000000000;
 		timeSpecification.tv_nsec = slack % 1000000000;
 		nanosleep(&timeSpecification, NULL);	
-	//}
+	//}*/
+	task->func();
 	return nullptr;
 }
 
@@ -157,4 +158,3 @@ void* startRoutine(void* arg) {
 //	//sched_param schedParams;
 //	//schedParams.sched_priority = task.priority;
 //}
-

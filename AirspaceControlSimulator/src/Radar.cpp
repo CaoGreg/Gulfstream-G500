@@ -1,8 +1,8 @@
 #include "Radar.h"
 
-Radar* Radar::radar = NULL;
+Radar* Radar::radar = nullptr;
 
-std::vector<Aircraft> Radar::scan(){
+std::vector<Aircraft*> Radar::scan(){
 	TestCase* testCase = new TestCase();
 	int size = sizeof(testCase->airplane_schedule);
 	static int ufo_position = -1;
@@ -15,10 +15,10 @@ std::vector<Aircraft> Radar::scan(){
 	}
 
 	Airspace* airspace = new Airspace();
-	std::vector<Aircraft> aircrafts = airspace->getAircrafts();
+	std::vector<Aircraft*> aircrafts = airspace->getAircrafts();
 	this->hits.clear();
 
-	for(Aircraft aircraft: aircrafts){
+	for(Aircraft* aircraft: aircrafts){
 		if(airspace->isInAirspace(aircraft)){
 			//aircraft detected flag?
 			this->hits.push_back(aircraft);

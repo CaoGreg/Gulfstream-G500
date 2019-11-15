@@ -6,14 +6,14 @@
  */
 #include "Operator.h"
 
-Operator* Operator::operater = NULL;
+Operator* Operator::operater = nullptr;
 
 Operator::Operator(){
 	
 }
 
 void Operator::setAltitude(int aircraftId, double altitude){
-	std::vector<Aircraft> aircraftList = Airspace::getAirspace()->getAircrafts();
+	std::vector<Aircraft*> aircraftList = Airspace::getAirspace()->getAircrafts();
 //	for(Aircraft& aircraft : aircraftList){
 //		if(aircraft.getId() == aircraftId){
 //			aircraft.setPositionY(altitude*1000);
@@ -23,7 +23,7 @@ void Operator::setAltitude(int aircraftId, double altitude){
 }
 
 void Operator::setSpeed(int aircraftId,double speed){
-	std::vector<Aircraft> aircraftList = Airspace::getAirspace()->getAircrafts();
+	std::vector<Aircraft*> aircraftList = Airspace::getAirspace()->getAircrafts();
 //	for(Aircraft& aircraft : aircraftList){
 //		if(aircraft.getId() == aircraftId){
 //			//set to new speed
@@ -33,7 +33,7 @@ void Operator::setSpeed(int aircraftId,double speed){
 }
 
 void Operator::setDirection(int aircraftId,int x, int y, int z){
-	std::vector<Aircraft> aircraftList = Airspace::getAirspace()->getAircrafts();
+	std::vector<Aircraft*> aircraftList = Airspace::getAirspace()->getAircrafts();
 //	for(Aircraft& aircraft : aircraftList){
 //		if(aircraft.getId() == aircraftId){
 //			aircraft.setPositionY(y);
@@ -45,7 +45,7 @@ void Operator::setDirection(int aircraftId,int x, int y, int z){
 }
 
 void Operator::setHoldingPattern(int aircraftId, bool holdingPattern){
-	std::vector<Aircraft> aircraftList = Airspace::getAirspace()->getAircrafts();
+	std::vector<Aircraft*> aircraftList = Airspace::getAirspace()->getAircrafts();
 //	for(Aircraft& aircraft : aircraftList){
 //		if(aircraft.getId() == aircraftId){
 //			//todo make aircraft hold function
