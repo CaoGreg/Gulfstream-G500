@@ -3,14 +3,17 @@
 Timer* Timer::timer = nullptr;
 
 double Timer::getCurrentTime(){
+	updateTimer();
 	return currentTime;
 }
 
-void Timer::updateTimer(double time){
-	if(!this->paused){
-		currentTime += time;
+void Timer::updateTimer(){
+
+	if( clock_gettime( CLOCK_REALTIME, &current) == -1 ) {
+		perror( "clock gettime" );
 	}
-	cout<<"timer thread " + to_string(getCurrentTime())<<endl;
+	//string  timer =  "Current timer: " + to_string(current.tv_sec) + " "  + to_string((double)(current.tv_nsec)/(double)1000000000L) + "\n";
+	currentTime = current.tv_sec;
 }
 
 void Timer::unpause(){

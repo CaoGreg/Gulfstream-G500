@@ -10,6 +10,12 @@
 
 #include <cstddef>
 #include <iostream>
+//Timer includes
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string>
 using namespace std;
 
 class Timer{
@@ -17,6 +23,11 @@ class Timer{
 		Timer(){
 			this->paused = false;
 			this->currentTime = 0;
+			this->current.tv_sec = 0;
+			this->current.tv_nsec = 0;
+			if( clock_settime( CLOCK_REALTIME, &current) == -1 ) {
+					perror( "setclock" );
+				}
 		}
 
 		virtual ~Timer(){ delete timer; }
@@ -24,7 +35,7 @@ class Timer{
 		static void createInstance(){ timer = new Timer(); }
 		static Timer* getTimer(){ return timer;	}
 		double getCurrentTime();
-		void updateTimer(double time);
+		void updateTimer();
 		void pause();
 		void unpause();
 		bool isPaused();
@@ -32,6 +43,7 @@ class Timer{
 		static Timer* timer;
 		bool paused;
 		double currentTime;
+		struct timespec current;
 };
 
 

@@ -16,6 +16,12 @@
 #include <sys/neutrino.h>
 #include <sys/poll.h>
 
+//Timer includes
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string>
 
 using namespace std;
 
@@ -55,14 +61,6 @@ int main(int argc, char *argv[]) {
 		Radar::getRadar()->update();
 	};
 
-	//Task to update the timer
-	Task timerTask;
-	timerTask.priority = 252;
-	timerTask.period = 500000000; //0.5sec
-	timerTask.func = []() {
-		Timer::getTimer()->updateTimer(1);
-	};
-
 	//Task to update the operator
 	Task operatorTask;
 	operatorTask.priority = 251;
@@ -92,25 +90,27 @@ int main(int argc, char *argv[]) {
 			DisplayManager::getDisplayManager()->update();
 		};
 
-
 	Airspace* airspace = Airspace::getAirspace();
 
-	while(!airspace->getIncomingAircrafts().empty() || !airspace->getCurrentAircrafts().empty()){
-		pthread_t timerThread = startTask(timerTask);
+	int time = 0;
+	while(time < 25/*!airspace->getIncomingAircrafts().empty() || !airspace->getCurrentAircrafts().empty()*/){
+
+		time = Timer::getTimer()->getCurrentTime();
+		cout << time << endl;
+
 		pthread_t airspaceThread = startTask(airspaceTask);
 		pthread_t radarThread = startTask(radarTask);
 		pthread_t operatorThread = startTask(operatorTask);
 		pthread_t logThread = startTask(logTask);
 		pthread_t displayThread = startTask(displayTask);
-		//pthread_t trackFileThread = startTask(trackFileTask);
+		pthread_t trackFileThread = startTask(trackFileTask);
 
 		pthread_join(airspaceThread, nullptr);
 		pthread_join(radarThread, nullptr);
-		pthread_join(timerThread, nullptr);
 		pthread_join(operatorThread, nullptr);
 		pthread_join(logThread, nullptr);
 		pthread_join(displayThread, nullptr);
-		//pthread_join(trackFileThread, nullptr);
+		pthread_join(trackFileThread, nullptr);
 	}
 	return EXIT_SUCCESS;
 }

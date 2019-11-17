@@ -95,5 +95,5 @@ void Airspace::update(){
 	updateCurrentAircrafts();
 	updatePositions();
 	removeFromAirspace();
-	Operator::getOperator()->setHitList(getCurrentAircrafts());
+	//Operator::getOperator()->setHitList(getCurrentAircrafts());
 }
