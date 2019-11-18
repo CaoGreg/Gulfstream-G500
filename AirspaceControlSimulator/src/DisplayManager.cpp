@@ -18,17 +18,21 @@ void DisplayManager::addToViolations(string s){
 }
 
 void DisplayManager::update(){
-	cout << "DisplayManager task\n";
-	cout << "Inside Airspace: " << endl;
-	for(unsigned int i = 0; i < Airspace::getAirspace()->getCurrentAircrafts().size(); i++){
-		cout << Airspace::getAirspace()->getCurrentAircrafts()[i]->print(2);
-	}
-	cout << endl;
-	cout << "Potential constrain violations: " << endl;
-	if(displayedViolations == ""){
-		displayedViolations = "None";
-	}
-	cout << displayedViolations;
-	cout << endl << endl;
-	displayedViolations = "";
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+		//cout << "DisplayManager task\n";
+		//cout << "The timer when entered display: ";
+		//cout << currentTime << endl;
+		cout << "Inside Airspace: " << endl;
+		for(unsigned int i = 0; i < Airspace::getAirspace()->getCurrentAircrafts().size(); i++){
+			cout << Airspace::getAirspace()->getCurrentAircrafts()[i]->print(2);
+		}
+		cout << endl;
+		cout << "Potential constraint violations: " << endl;
+		if(displayedViolations == ""){
+			displayedViolations = "None";
+		}
+		cout << displayedViolations;
+		cout << endl << endl;
+		displayedViolations = "";
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }

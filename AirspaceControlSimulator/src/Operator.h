@@ -8,17 +8,13 @@
 #define OPERATOR_H_
 
 #include "Aircraft.h"
-#include "Airspace.h"
-#include "DisplayManager.h"
+#include "AirspaceControlSimulator.h"
 #include <string>
 #include <vector>
 #include <string>
 #include <cstdlib>
 #include <math.h>
 #include <cmath>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
 
 using namespace std;
 
@@ -62,7 +58,6 @@ private:
 	static Operator* operater; //operator is a keyword
 	vector<Aircraft*> hitsList;
 	int choice;
-	condition_variable cv;
 };
 
 #endif /* OPERATOR_H_ */

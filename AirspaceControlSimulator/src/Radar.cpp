@@ -9,6 +9,8 @@ void Radar::scan(){
 }
 
 void Radar::update(){
-	cout<<"update radar"<<endl;
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+	//cout<<"Radar task"<<endl;
 	scan();
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }

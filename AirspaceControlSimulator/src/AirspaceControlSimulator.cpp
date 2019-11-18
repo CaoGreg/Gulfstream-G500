@@ -1,32 +1,8 @@
-#include "Airspace.h"
-#include "Radar.h"
-#include "Timer.h"
-#include "Operator.h"
-#include "Log.h"
-#include "TrackFile.h"
-#include "Task.h"
-#include "DisplayManager.h"
+#include "AirspaceControlSimulator.h"
 
-#include <cstdlib>
-#include <cstdint>
-#include <iostream>
-#include <time.h>
-#include <sys/siginfo.h>
-#include <pthread.h>
-#include <sys/neutrino.h>
-#include <sys/poll.h>
-
-//Timer includes
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string>
-
-using namespace std;
-
+AirspaceControlSimulator* AirspaceControlSimulator::airspacecontrolsimulator = nullptr;
+mutex AirspaceControlSimulator::threadMutex;
 void init();
-pthread_t setupThread();
 pthread_t startTask(Task& task);
 void* startRoutine(void* arg);
 
@@ -47,77 +23,76 @@ int main(int argc, char *argv[]) {
 	//Task to update the airspace
 	Task airspaceTask;
 	airspaceTask.priority = 254;
-	airspaceTask.period = 500000000; //0.5sec
+	airspaceTask.period = 1000000000; //1sec
 	airspaceTask.func = []() {
 		Airspace::getAirspace()->update();
-	};
-	//Airspace::getAirspace()->update();
-
-	//Task to update the radar
-	Task radarTask;
-	radarTask.priority = 253;
-	radarTask.period = 500000000; //0.5sec
-	radarTask.func = []() {
-		Radar::getRadar()->update();
 	};
 
 	//Task to update the operator
 	Task operatorTask;
-	operatorTask.priority = 251;
-	operatorTask.period = 500000000; //0.5sec
+	operatorTask.priority = 253;
+	operatorTask.period = 2000000000; //2sec
 	operatorTask.func = []() {
 		Operator::getOperator()->update();
 	};
-	//Task to update the log
-	Task logTask;
-	logTask.priority = 250;
-	logTask.period = 500000000; //0.5sec
-	logTask.func = []() {
-		Log::getLog()->update();
-	};
+
 	//Task to update the track file
 	Task trackFileTask;
-	trackFileTask.priority = 249;
-	trackFileTask.period = 500000000; //0.5sec
+	trackFileTask.priority = 252;
+	trackFileTask.period = 3000000000; //3sec
 	trackFileTask.func = []() {
 		TrackFile::getTrackFile()->update();
 	};
+
 	//Task for the display
-		Task displayTask;
-		displayTask.priority = 249;
-		displayTask.period = 500000000; //0.5sec
-		displayTask.func = []() {
-			DisplayManager::getDisplayManager()->update();
-		};
+	Task displayTask;
+	displayTask.priority = 251;
+	displayTask.period = 5000000000; //5sec
+	displayTask.func = []() {
+		DisplayManager::getDisplayManager()->update();
+	};
+
+	//Task to update the radar
+	Task radarTask;
+	radarTask.priority = 250;
+	radarTask.period = 15000000000; //15sec
+	radarTask.func = []() {
+		Radar::getRadar()->update();
+	};
+
+	//Task to update the log
+	Task logTask;
+	logTask.priority = 249;
+	logTask.period = 60000000000; //60sec
+	logTask.func = []() {
+		Log::getLog()->update();
+	};
 
 	Airspace* airspace = Airspace::getAirspace();
 
-	int time = 0;
-	while(time < 25/*!airspace->getIncomingAircrafts().empty() || !airspace->getCurrentAircrafts().empty()*/){
+	pthread_t airspaceThread = startTask(airspaceTask);
+	pthread_t operatorThread = startTask(operatorTask);
+	pthread_t trackThread = startTask(trackFileTask);
+	pthread_t displayThread = startTask(displayTask);
+	pthread_t radarThread = startTask(radarTask);
+	pthread_t logThread = startTask(logTask);
 
-		time = Timer::getTimer()->getCurrentTime();
-		cout << time << endl;
+	//Join threads
+	pthread_join(airspaceThread, nullptr);
+	pthread_join(operatorThread, nullptr);
+	pthread_join(trackThread, nullptr);
+	pthread_join(displayThread, nullptr);
+	pthread_join(radarThread, nullptr);
+	pthread_join(logThread, nullptr);
 
-		pthread_t airspaceThread = startTask(airspaceTask);
-		pthread_t radarThread = startTask(radarTask);
-		pthread_t operatorThread = startTask(operatorTask);
-		pthread_t logThread = startTask(logTask);
-		pthread_t displayThread = startTask(displayTask);
-		pthread_t trackFileThread = startTask(trackFileTask);
 
-		pthread_join(airspaceThread, nullptr);
-		pthread_join(radarThread, nullptr);
-		pthread_join(operatorThread, nullptr);
-		pthread_join(logThread, nullptr);
-		pthread_join(displayThread, nullptr);
-		pthread_join(trackFileThread, nullptr);
-	}
 	return EXIT_SUCCESS;
 }
 
 //initialize the objects
 void init(){
 	cout<<"Initializing simulation objects" << std::endl;
+	AirspaceControlSimulator::createInstance();
 	Airspace::createInstance();
 	Radar::createInstance();
 	Timer::createInstance();
@@ -146,27 +121,22 @@ pthread_t startTask(Task& task) {
 void* startRoutine(void* arg) {
 	const Task* task = reinterpret_cast<const Task*>(arg);
 
-	/*uint64_t phase = 0;
+	uint64_t phase = 0;
 	uint64_t startTime = 0;
 	uint64_t endTime = 0;
 	ClockTime(CLOCK_MONOTONIC, NULL, &phase);
-	int deadline =  phase;
-	//while(true) {
+	uint64_t deadline =  phase;
+	while(true) {
 		deadline += task->period;
 		ClockTime(CLOCK_MONOTONIC, NULL, &startTime);
 		task->func();
 		ClockTime(CLOCK_MONOTONIC, NULL, &endTime);
-		int slack = deadline - endTime;
-		timespec timeSpecification;
-		timeSpecification.tv_sec = slack * 1000000000;
+		uint64_t slack = deadline - endTime;
+		struct timespec timeSpecification;
+		timeSpecification.tv_sec = slack / 1000000000;
 		timeSpecification.tv_nsec = slack % 1000000000;
-		nanosleep(&timeSpecification, NULL);	
-	//}*/
-	task->func();
+		nanosleep(&timeSpecification, NULL);
+	}
+	//task->func();
 	return nullptr;
 }
-
-//pthread_t setupThread(int priority, int period){
-//	//sched_param schedParams;
-//	//schedParams.sched_priority = task.priority;
-//}

@@ -6,7 +6,7 @@
 //A task is composed of a priority, its period and the function to be executed in a thread
 struct Task {
 	uint64_t priority;
-	uint8_t period;
+	uint64_t period;
 	void (*func)();	
 };
 

@@ -153,14 +153,16 @@ bool Operator::checkViolations(double projectedTime){
 bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double projectedTime){
 	bool collisionRisk = false;
 	//check elevation distance
-	if(abs(aircraft1->getPositionZ() - aircraft2->getPositionZ()) <= 1000.0){
-		collisionRisk = true;
-		DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in elevation at " + to_string(projectedTime) + "\n");
-	}
-	//check the distance between the aircrafts
-	if(sqrt(pow((aircraft1->getPositionX()-aircraft2->getPositionX()),2) + pow((aircraft1->getPositionY()-aircraft2->getPositionY()),2)) <= 15840){
-		collisionRisk = true;
-		DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in horizontal distance at " + to_string(projectedTime) + "\n");
+	if(Airspace::getAirspace()->isInAirspace(aircraft1) && Airspace::getAirspace()->isInAirspace(aircraft2)){
+		if(abs(aircraft1->getPositionZ() - aircraft2->getPositionZ()) <= 1000.0){
+			collisionRisk = true;
+			DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in elevation at " + to_string(projectedTime) + "\n");
+		}
+		//check the distance between the aircrafts
+		if(sqrt(pow((aircraft1->getPositionX()-aircraft2->getPositionX()),2) + pow((aircraft1->getPositionY()-aircraft2->getPositionY()),2)) <= 15840){
+			collisionRisk = true;
+			DisplayManager::getDisplayManager()->addToViolations("Aircraft " + to_string(aircraft1->getId()) + " and Aircraft " + to_string(aircraft2->getId()) + " too close in horizontal distance at " + to_string(projectedTime) + "\n");
+		}
 	}
 	return collisionRisk;
 }
@@ -185,7 +187,9 @@ void Operator::timedInput(){
 }*/
 
 void Operator::update(){
-	cout<<"operator thread"<<endl;
-	checkViolations(6.0);
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+	//cout<<"operator thread"<<endl;
+	checkViolations(180.0);
 	//timedInput();
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }

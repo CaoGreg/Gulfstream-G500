@@ -1,6 +1,6 @@
 #pragma once
 #include "Aircraft.h"
-#include "Timer.h"
+#include "AirspaceControlSimulator.h"
 #include "TestCase.h"
 #include "Operator.h"
 #include <vector>

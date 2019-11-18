@@ -89,11 +89,11 @@ void Airspace::removeFromAirspace(){
 }
 
 void Airspace::update(){
-	cout << "Airspace" << endl;
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+	//cout << "Airspace" << endl;
 	updateTime();
-
 	updateCurrentAircrafts();
 	updatePositions();
 	removeFromAirspace();
-	//Operator::getOperator()->setHitList(getCurrentAircrafts());
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }

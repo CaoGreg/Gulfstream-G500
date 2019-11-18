@@ -10,8 +10,7 @@
 
 #include <string>
 #include <iostream>
-#include "Airspace.h"
-#include "Operator.h"
+#include "AirspaceControlSimulator.h"
 
 using namespace std;
 
