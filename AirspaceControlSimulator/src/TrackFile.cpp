@@ -21,7 +21,7 @@ void TrackFile::update(){
 	string time = "Current time: " + to_string(Timer::getTimer()->getCurrentTime()) + "\n";
 	this->history += time;
 	otrackFile << time;
-	this->history += "Incoming aircrafts\n";
+	this->history += "Inside aircrafts\n";
 	for(unsigned int i = 0; i < this->hits.size(); i++){
 		//otrackFile << Airspace::getAirspace()->getCurrentAircrafts()[i]->print(2);
 		otrackFile << this->hits[i]->print(2);

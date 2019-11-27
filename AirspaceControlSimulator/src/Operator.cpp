@@ -35,44 +35,64 @@ void Operator::changeAltitude(int aircraftId, double altitude){
 	}
 }
 
-void Operator::setVelocity(int aircraftId,double velX, double velY, double velZ){
-	for(Aircraft* aircraft : hitsList){
-		if(aircraft->getId() == aircraftId){
-			aircraft->setVelocityX(velX);
-			aircraft->setVelocityY(velY);
-			aircraft->setVelocityZ(velZ);
+void Operator::changeVelocity(int aircraftId,double velX, double velY, double velZ){
+	if(aircraftId <= -1){
+		cout << "You cannot modify an unknown aircraft!" << endl;
+	}else{
+		bool found = false;
+		for(Aircraft* aircraft : hitsList){
+			if(aircraft->getId() == aircraftId){
+				aircraft->changeVel(velX, velY, velZ);
+				found = true;
+				cout << "Velocity changed!" << endl;
+			}
+		}
+		if(!found){
+			cout << "Aircraft id" << to_string(aircraftId) << " not found" << endl;
 		}
 	}
-	//update the velocity in the airspace
-	Airspace::getAirspace()->setCurrentAircrafts(hitsList);
 }
 
-void Operator::setDirection(int aircraftId,double x, double y, double z){
-	//update the position when the id matches
-	for(Aircraft* aircraft : hitsList){
-		if(aircraft->getId() == aircraftId){
-			aircraft->setPositionY(y);
-			aircraft->setPositionX(x);
-			aircraft->setPositionZ(z);
+void Operator::changeDirection(int aircraftId,double x, double y){
+	if(aircraftId <= -1){
+		cout << "You cannot modify an unknown aircraft!" << endl;
+	}else{
+		bool found = false;
+		for(Aircraft* aircraft : hitsList){
+			if(aircraft->getId() == aircraftId){
+				aircraft->changeDir(x, y);
+				found = true;
+				cout << "Direction changed!" << endl;
+			}
+		}
+		if(!found){
+			cout << "Aircraft id" << to_string(aircraftId) << " not found" << endl;
 		}
 	}
-	//update the position in the airspace
-	Airspace::getAirspace()->setCurrentAircrafts(hitsList);
 }
 
 void Operator::setHoldingPattern(int aircraftId, bool holdingPattern){
-	for(Aircraft* aircraft : hitsList){
-		if(aircraft->getId() == aircraftId){
-			if(holdingPattern == true){
-				//aircraft->hold(radius);//TODO determine the radius to hold pattern
-			}
-			else{
-				//TODO remove holding pattern;
+	if(aircraftId <= -1){
+		cout << "You cannot modify an unknown aircraft!" << endl;
+	}else{
+		bool found = false;
+		for(Aircraft* aircraft : hitsList){
+			if(aircraft->getId() == aircraftId){
+				found = true;
+				if(holdingPattern == true){
+					aircraft->hold(300);
+					cout << "Aircraft " << to_string(aircraft->getId()) << " is holding" << endl;
+				}
+				else{
+					aircraft->stopHolding();
+					cout << "Aircraft " << to_string(aircraft->getId()) << " stopped holding" << endl;
+				}
 			}
 		}
+		if(!found){
+			cout << "Aircraft id" << to_string(aircraftId) << " not found" << endl;
+		}
 	}
-	//update holding pattern in airspace
-	Airspace::getAirspace()->setCurrentAircrafts(hitsList);
 }
 
 string Operator::getAircraftData(int aircraftId){
@@ -90,13 +110,18 @@ string Operator::getAircraftData(int aircraftId){
 
 void Operator::setHoldingPatternAll(bool holdingPattern){
 	for(Aircraft* aircraft : hitsList){
-		if(holdingPattern == true){
-			//aircraft->hold(radius);
+		if(aircraft->getId() != -1){
+			if(holdingPattern == true){
+				aircraft->hold(300);
+				cout << "Aircraft " << to_string(aircraft->getId()) << " is holding" << endl;
+			}
+			else{
+				aircraft->stopHolding();
+				cout << "Aircraft " << to_string(aircraft->getId()) << " stopped holding" << endl;
+			}
+		}else{
+			cout << "You cannot modify an unknown aircraft!" << endl;
 		}
-		else{
-			//TODO remove holding pattern
-		}
-		Airspace::getAirspace()->setCurrentAircrafts(hitsList);
 	}
 }
 
@@ -117,12 +142,44 @@ void Operator::deleteAircraft(int id){
 	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }
 
+void Operator::projectedPath(int id, double projectedTime){
+	if(id <= -1){
+		cout << "You cannot forecast an unknown aircraft!" << endl;
+	}else{
+		bool found = false;
+		for(Aircraft* aircraft : hitsList){
+			if(aircraft->getId() == id){
+				double t = Timer::getTimer()->getCurrentTime();
+				double time = t + projectedTime;
+				Aircraft ac = predictPath(aircraft, time);
+				Aircraft* pac = &(ac);
+				string future = string("Aircraft: ") + to_string(pac->getId()) + " at time: " + to_string(time) + " will be at (" + to_string(pac->getPositionX()) + "," + to_string(pac->getPositionY()) + "," + to_string(pac->getPositionZ()) +
+						") moving at (" + to_string(pac->getVelocityX()) + "," + to_string(pac->getVelocityY()) + "," + to_string(pac->getVelocityZ()) + ")\n";
+				found = true;
+				cout << future << endl;
+				if(Airspace::getAirspace()->isInAirspace(pac)){
+					cout << "The airspace will have left the airspace" << endl;
+				}
+			}
+		}
+		if(!found){
+			cout << "Aircraft id" << to_string(id) << " not found" << endl;
+		}
+	}
+}
+
 void Operator::send(int id,string message){
 	//TODO send message
 }
 
 void Operator::broadcast(string message){
-	//TODO broadcast messages
+	for(Aircraft* aircraft : hitsList){
+		if(aircraft->getId() == -1){
+			int newId = rand() % 1000 + 1000;
+			aircraft->setId(newId);
+			cout << "My id is " << to_string(newId) << endl;
+		}
+	}
 }
 
 Aircraft Operator::predictPath(Aircraft* ac, double projectedTime){
@@ -136,7 +193,7 @@ Aircraft Operator::predictPath(Aircraft* ac, double projectedTime){
 		}
 	}
 	if(found)
-		futureAircraft.updatePosition(projectedTime);
+		futureAircraft.updatePosition(projectedTime, futureAircraft.isHolding());
 	return futureAircraft;
 }
 
@@ -194,7 +251,8 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
  * 			 6 = getAircraftData (id)
  * 			 7 = setHolding pattern (one or all, true or false, id
  * 			 8 = projectAircraft (id projected time)
- * 			 9 = help
+ * 			 9 = ask for identification
+ * 			 10 = help
  *
  */
 
@@ -231,31 +289,47 @@ void Operator::executeCommand(string command){
 			changeAltitude(id, listCommand[2]);
 			break;
 		case 4:
-			//TODO set velocity
+			id = listCommand[1];
+			changeVelocity(id, listCommand[2], listCommand[3], listCommand[4]);
 			break;
 		case 5:
-			//TODO set direction
+			id = listCommand[1];
+			changeDirection(id, listCommand[2], listCommand[3]);
 			break;
 		case 6:
 			id = listCommand[1];
 			cout << getAircraftData(id);
 			break;
 		case 7:
-			//TODO set holding partern
+			if(listCommand[1] == 2){
+				setHoldingPatternAll(listCommand[2]);
+			}else if(listCommand[1] == 1){
+				setHoldingPattern(listCommand[3], listCommand[2]);
+			}else{
+				cout << "Invalid input" << endl;
+			}
 			break;
 		case 8:
-			//TODO project into future
+			id = listCommand[1];
+			projectedPath(id, listCommand[2]);
 			break;
 		case 9:
+			broadcast("Identify yourself");
+			break;
+		case 10:
 			cout << "Commands: 1 = add aircraft (id velx vely velz x y z)" << endl
 			<< "	  2 = delete aircraft (id)" << endl
 			<<	"	  3 = change altitude (id elevation change)" << endl
-			<<	"	  4 = set velocity (id velx vely velz)" << endl
-			<<	"          5 = set direction (id x y z)" << endl
+			<<	"	  4 = change velocity (id velx vely velz)" << endl
+			<<	"          5 = change direction (id x y z)" << endl
 			<<	"	  6 = getAircraftData (id)" << endl
-			<< "	  7 = setHolding pattern (one or all, true or false, id" << endl
+			<< "	  7 = setHolding pattern (one (1) or all (2), true (1) or false (0), id)" << endl
 			<< "     	  8 = projectAircraft (id projected time)" << endl
-			<< "          9 = help" << endl;
+			<< "          9 = ask for identification" << endl
+			<< "          10 = help" << endl;
+			break;
+		default:
+			cout << "Invalid command" << endl;
 			break;
 		}
 	}

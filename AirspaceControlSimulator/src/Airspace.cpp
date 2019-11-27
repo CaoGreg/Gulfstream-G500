@@ -39,12 +39,7 @@ void Airspace::updateTime(){
 }
 void Airspace::updatePositions(){
 	for(Aircraft* aircraft : current_aircrafts){
-		if(aircraft->isHolding()){
-			//todo update values for holding aircraft
-		}
-		else{
-			aircraft->updatePosition((double)this->time);
-		}
+		aircraft->updatePosition((double)this->time, aircraft->isHolding());
 	}
 }
 

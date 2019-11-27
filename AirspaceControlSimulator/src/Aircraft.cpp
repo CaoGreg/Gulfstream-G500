@@ -21,7 +21,7 @@ Aircraft::Aircraft(int id, double velX, double velY, double velZ, double x, doub
 	this->lefttime = 0;
 }
 
-void Aircraft::updatePosition(double time){
+void Aircraft::updatePosition(double time, bool hold){
 
 	this->prevX = x;
 	this->prevY = y;
@@ -30,9 +30,11 @@ void Aircraft::updatePosition(double time){
 	double timeVariation = time - this->prevTimeStamp;
 
 	//update the position and the timestamp
-	this->x += this->velX * timeVariation;
-	this->y += this->velY * timeVariation;
-	this->z += this->velZ * timeVariation;
+	if(!hold){
+		this->x += this->velX * timeVariation;
+		this->y += this->velY * timeVariation;
+		this->z += this->velZ * timeVariation;
+	}
 	this->timeStamp = time;	
 }
 
@@ -73,15 +75,15 @@ double Aircraft::getVelocityZ(){
 }
 
 void Aircraft::setVelocityX(double velx){
-	this->x = velx;
+	this->velX = velx;
 }
 
 void Aircraft::setVelocityY(double vely){
-	this->y = vely;
+	this->velY = vely;
 }
 
 void Aircraft::setVelocityZ(double velz){
-	this->z = velz;
+	this->velZ = velz;
 }
 
 void Aircraft::hold(double radius){
@@ -114,7 +116,18 @@ void Aircraft::setLeftTime(double time){
 }
 
 void Aircraft::changeAltitude(double change){
-	this->z += change;
+	this->z += (change * 1000);
+}
+
+void Aircraft::changeVel(double velX, double velY, double velZ){
+	this->velX += velX;
+	this->velY += velY;
+	this->velZ += velZ;
+}
+
+void Aircraft::changeDir(double x, double y){
+	this->x += x;
+	this->y += y;
 }
 
 string Aircraft::print(int choice){

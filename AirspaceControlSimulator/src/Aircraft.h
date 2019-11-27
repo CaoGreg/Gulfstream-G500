@@ -6,7 +6,7 @@ class Aircraft {
 public:
 	Aircraft(){}
 	Aircraft(int id, double velX, double velY, double velZ, double x, double y, double z, double entrytime);
-	void updatePosition(double time);
+	void updatePosition(double time, bool hold);
 	double getPositionX();
 	double getPositionY();
 	double getPositionZ();
@@ -19,7 +19,10 @@ public:
 	void setVelocityX(double x);
 	void setVelocityY(double y);
 	void setVelocityZ(double z);
+	void setId(int id){ this->id = id; }
 	void changeAltitude(double change);
+	void changeVel(double velX, double velY, double velZ);
+	void changeDir(double x, double y);
 	bool isHolding();
 	void hold(double radius);
 	void stopHolding();

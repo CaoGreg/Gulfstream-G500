@@ -16,6 +16,7 @@
 #include <math.h>
 #include <cmath>
 #include <sstream>
+#include <stdlib.h>
 //#include <conio.h>
 
 using namespace std;
@@ -30,8 +31,8 @@ public:
 
 	//commands for a given aircraft
 	void changeAltitude(int aircraftId, double elevationChange);
-	void setVelocity(int aircraftId, double velX, double velY, double velZ);
-	void setDirection(int aircraftId,double x, double y, double z);
+	void changeVelocity(int aircraftId, double velX, double velY, double velZ);
+	void changeDirection(int aircraftId,double x, double y);
 	void setHoldingPattern(int aircraftId, bool holdingPattern);
 	//commands for all aircrafts
 	string getAircraftData(int aircraftId);
@@ -39,6 +40,7 @@ public:
 	//operator requests
 	void addAircraft(int id, int velX,int velY, int velZ, int x, int y, int z);
 	void deleteAircraft(int id);
+	void projectedPath(int id, double projectedTime);
 	//some vector getProjectedPosition(int id, double n); get projected postion funtion must make a vector class
 
 	//get all aircraft
