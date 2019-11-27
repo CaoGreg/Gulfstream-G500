@@ -52,7 +52,7 @@ public:
 	void setHitList(vector<Aircraft*> hits);
 
 	//check violations
-	Aircraft* predictPath(int id, double projectedTime);
+	Aircraft predictPath(Aircraft* ac, double projectedTime);
 	bool checkViolations(double projectedTime);
 	bool hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double projectedTime);
 private:

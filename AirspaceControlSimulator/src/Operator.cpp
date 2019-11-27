@@ -99,12 +99,15 @@ void Operator::addAircraft(int id, int velX,int velY, int velZ, int x, int y, in
 	//hitsList.push_back(aircraft);
 	//Airspace::getAirspace()->setCurrentAircrafts(hitsList);
 	Airspace::getAirspace()->addAircraft(aircraft);
-	cout << Airspace::getAirspace()->getCurrentAircrafts().size();
 }
 
 void Operator::deleteAircraft(int id){
 	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
-	Airspace::getAirspace()->deleteAircraft(id);
+	if(id <= -1){
+		cout << "You cannot delete an unknown aircraft!" << endl;
+	}else{
+		Airspace::getAirspace()->deleteAircraft(id);
+	}
 	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }
 
@@ -116,16 +119,18 @@ void Operator::broadcast(string message){
 	//TODO broadcast messages
 }
 
-Aircraft* Operator::predictPath(int id, double projectedTime){
+Aircraft Operator::predictPath(Aircraft* ac, double projectedTime){
 	//TODO predict position of the aircraft given the time
-	Aircraft* futureAircraft;
+	Aircraft futureAircraft;
+	bool found = false;
 	for(Aircraft* aircraft : hitsList){
-		if(id == aircraft->getId()){
-			futureAircraft = aircraft;
+		if(ac->getId() == aircraft->getId()){
+			futureAircraft = *aircraft;
+			found = true;
 		}
 	}
-	if(futureAircraft != nullptr)
-		futureAircraft->updatePosition(projectedTime);
+	if(found)
+		futureAircraft.updatePosition(projectedTime);
 	return futureAircraft;
 }
 
@@ -138,7 +143,11 @@ bool Operator::checkViolations(double projectedTime){
 			if(i != j){
 				for(int k = 0; k <= projectedTime; k++){
 					double time = Timer::getTimer()->getCurrentTime()+k;
-					violation = hasCollisions(predictPath(hitsList.at(i)->getId(), time),predictPath(hitsList.at(j)->getId(), time), time);
+					Aircraft a1 = predictPath(hitsList.at(i), time);
+					Aircraft* pa1 = &(a1);
+					Aircraft a2 = predictPath(hitsList.at(j), time);
+					Aircraft* pa2 = &(a2);
+					violation = hasCollisions(pa1,pa2,time);
 					if(violation){
 						return violation;
 					}
@@ -168,6 +177,8 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
 }
 
 //1 8 1 1 1 948 765 18000
+//1 9 1 1 1 948 765 18000
+
 
 /* Commands: 1 = add aircraft (id velx vely velz x y z)
  * 			 2 = delete (id)
@@ -208,18 +219,18 @@ void Operator::executeCommand(string command){
 		case 2:
 			id = listCommand[1];
 			deleteAircraft(id);
-			cout << "Delete aircraft!" << endl;
 			break;
 		case 9:
 			cout << "Commands: 1 = add aircraft (id velx vely velz x y z)" << endl
-			  	 << "	  2 = delete aircraft (id)" << endl
-			  	 <<	"	  3 = set altitude (id elevation change)" << endl
-			  	 <<	"	  4 = set velocity (id velx vely velz)" << endl
-			  	 <<	"          5 = set direction (id x y z)" << endl
-			  	 <<	"	  6 = getAircraftData (id)" << endl
-			  	 << "	  7 = setHolding pattern (one or all, true or false, id" << endl
-			  	 << "     	  8 = projectAircraft (id projected time)" << endl
-			  	 << "          9 = help" << endl;
+			<< "	  2 = delete aircraft (id)" << endl
+			<<	"	  3 = set altitude (id elevation change)" << endl
+			<<	"	  4 = set velocity (id velx vely velz)" << endl
+			<<	"          5 = set direction (id x y z)" << endl
+			<<	"	  6 = getAircraftData (id)" << endl
+			<< "	  7 = setHolding pattern (one or all, true or false, id" << endl
+			<< "     	  8 = projectAircraft (id projected time)" << endl
+			<< "          9 = help" << endl;
+			break;
 		}
 	}
 }

@@ -5,8 +5,8 @@
  *      Author: Greg
  */
 
-#ifndef TIMER_H_
-#define TIMER_H_
+#pragma once
+
 
 #include <cstddef>
 #include <iostream>
@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string>
+#include <mutex>
+
 using namespace std;
 
 class Timer{
@@ -35,6 +37,8 @@ class Timer{
 		static void createInstance(){ timer = new Timer(); }
 		static Timer* getTimer(){ return timer;	}
 		double getCurrentTime();
+		static void threadUnlock(){ timerMutex.unlock(); }
+		static void threadLock(){ timerMutex.lock(); }
 		void updateTimer();
 		void pause();
 		void unpause();
@@ -44,8 +48,8 @@ class Timer{
 		bool paused;
 		double currentTime;
 		struct timespec current;
+		static mutex timerMutex;
+
 };
 
 
-
-#endif /* TIMER_H_ */

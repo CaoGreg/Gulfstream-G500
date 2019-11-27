@@ -7,7 +7,6 @@ void Radar::scan(){
 	scanned_aircrafts = Airspace::getAirspace()->getCurrentAircrafts();
 	Operator::getOperator()->setHitList(scanned_aircrafts);
 	TrackFile::getTrackFile()->setHits(scanned_aircrafts);
-	//Operator::getOperator()->checkViolations(180.0);
 }
 
 void Radar::update(){

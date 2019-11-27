@@ -4,6 +4,7 @@ using namespace std;
 
 class Aircraft {
 public:
+	Aircraft(){}
 	Aircraft(int id, double velX, double velY, double velZ, double x, double y, double z, double entrytime);
 	void updatePosition(double time);
 	double getPositionX();

@@ -1,6 +1,7 @@
 #include "Timer.h"
 
 Timer* Timer::timer = nullptr;
+mutex Timer::timerMutex;
 
 double Timer::getCurrentTime(){
 	updateTimer();

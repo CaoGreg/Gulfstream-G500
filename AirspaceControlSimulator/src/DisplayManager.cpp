@@ -22,6 +22,7 @@ void DisplayManager::update(){
 		//cout << "DisplayManager task\n";
 		//cout << "The timer when entered display: ";
 		//cout << currentTime << endl;
+		cout << "Forecast airspace giving the track file of the last radar hit" << endl;
 		cout << "Inside Airspace: " << endl;
 		for(unsigned int i = 0; i < TrackFile::getTrackFile()->getHits().size(); i++){
 			cout << TrackFile::getTrackFile()->getHits()[i]->print(2);

@@ -33,8 +33,9 @@ bool Airspace::isInAirspace(Aircraft* a){
 
 void Airspace::updateTime(){
 	//update time in airspace
+	Timer::getTimer()->threadLock();
 	this->time = Timer::getTimer()->getCurrentTime();
-
+	Timer::getTimer()->threadUnlock();
 }
 void Airspace::updatePositions(){
 	for(Aircraft* aircraft : current_aircrafts){
@@ -90,11 +91,17 @@ void Airspace::removeFromAirspace(){
 
 void Airspace::deleteAircraft(int id){
 	int counter = 0;
+	bool deleted = false;
 	for(Aircraft* aircraft : current_aircrafts){
 		if(id == aircraft->getId()){
 			current_aircrafts.erase(current_aircrafts.begin() + counter);
+			deleted = true;
+			cout << "Aircraft deleted from airspace" << endl;
 		}
 		counter++;
+	}
+	if(!deleted){
+		cout << "Aircraft not found to be deleted" << endl;
 	}
 }
 
