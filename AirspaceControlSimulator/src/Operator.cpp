@@ -169,14 +169,14 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
 
 //1 8 1 1 1 948 765 18000
 
-/* Commands: 1 = add aircraft (id, velx vely vel z, x y z)
+/* Commands: 1 = add aircraft (id velx vely velz x y z)
  * 			 2 = delete (id)
- * 			 3 = set altitude (id, elevation change)
- * 			 4 = set velocity (id, velx vely velz)
- * 			 5 = set direction (id, x y z)
+ * 			 3 = set altitude (id elevation change)
+ * 			 4 = set velocity (id velx vely velz)
+ * 			 5 = set direction (id x y z)
  * 			 6 = getAircraftData (id)
  * 			 7 = setHolding pattern (one or all, true or false, id
- * 			 8 = projectAircraft (id, projected time)
+ * 			 8 = projectAircraft (id projected time)
  * 			 9 = help
  *
  */
@@ -210,6 +210,16 @@ void Operator::executeCommand(string command){
 			deleteAircraft(id);
 			cout << "Delete aircraft!" << endl;
 			break;
+		case 9:
+			cout << "Commands: 1 = add aircraft (id velx vely velz x y z)" << endl
+			  	 << "	  2 = delete aircraft (id)" << endl
+			  	 <<	"	  3 = set altitude (id elevation change)" << endl
+			  	 <<	"	  4 = set velocity (id velx vely velz)" << endl
+			  	 <<	"          5 = set direction (id x y z)" << endl
+			  	 <<	"	  6 = getAircraftData (id)" << endl
+			  	 << "	  7 = setHolding pattern (one or all, true or false, id" << endl
+			  	 << "     	  8 = projectAircraft (id projected time)" << endl
+			  	 << "          9 = help" << endl;
 		}
 	}
 }
@@ -223,5 +233,4 @@ void Operator::update(){
 	executeCommand(command);
 	//timedInput();
 	//AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
-
 }
