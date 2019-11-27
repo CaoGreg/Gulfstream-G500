@@ -76,7 +76,9 @@ string Operator::getAircraftData(int aircraftId){
 			info = aircraft->print(2);
 		}
 	}
-	info = "Could not find the specified plane ID";
+	if(info.compare("") == 0){
+		info = "Could not find the specified plane ID";
+	}
 	return info;
 }
 
@@ -92,20 +94,18 @@ void Operator::setHoldingPatternAll(bool holdingPattern){
 	}
 }
 
-void Operator::addAircraft(int id, int x, int y, int z, int velX,int velY, int velZ){
-	Aircraft* aircraft = new Aircraft(id,x,y,z,velX,velY,velZ,Timer::getTimer()->getCurrentTime());
-	hitsList.push_back(aircraft);
-	Airspace::getAirspace()->setCurrentAircrafts(hitsList);
+void Operator::addAircraft(int id, int velX,int velY, int velZ, int x, int y, int z){
+	Aircraft* aircraft = new Aircraft(id,velX,velY,velZ, x,y,z, Timer::getTimer()->getCurrentTime());
+	//hitsList.push_back(aircraft);
+	//Airspace::getAirspace()->setCurrentAircrafts(hitsList);
+	Airspace::getAirspace()->addAircraft(aircraft);
+	cout << Airspace::getAirspace()->getCurrentAircrafts().size();
 }
 
 void Operator::deleteAircraft(int id){
-	int counter = 0;
-	for(Aircraft* aircraft : hitsList){
-		if(id == aircraft->getId()){
-			hitsList.erase(hitsList.begin() + counter);
-		}
-		counter++;
-	}
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+	Airspace::getAirspace()->deleteAircraft(id);
+	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
 }
 
 void Operator::send(int id,string message){
@@ -167,29 +167,61 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
 	return collisionRisk;
 }
 
-/*void Operator::read_value(){
-	cin >> choice;
-	cv.notify_one();
+//1 8 1 1 1 948 765 18000
+
+/* Commands: 1 = add aircraft (id, velx vely vel z, x y z)
+ * 			 2 = delete (id)
+ * 			 3 = set altitude (id, elevation change)
+ * 			 4 = set velocity (id, velx vely velz)
+ * 			 5 = set direction (id, x y z)
+ * 			 6 = getAircraftData (id)
+ * 			 7 = setHolding pattern (one or all, true or false, id
+ * 			 8 = projectAircraft (id, projected time)
+ * 			 9 = help
+ *
+ */
+
+void Operator::executeCommand(string command){
+	string value;
+	int id, velX, velY, velZ, x, y, z;
+	if(!command.empty()){
+		stringstream X(command);
+		vector<int> listCommand;
+		while(getline(X, value, ' ')){
+			int val;
+			istringstream(value) >> val;
+			listCommand.push_back(val);
+		}
+		switch(listCommand[0]){
+		case 1:
+			id = listCommand[1];
+			velX = listCommand[2];
+			velY = listCommand[3];
+			velZ = listCommand[4];
+			x = listCommand[5];
+			y = listCommand[6];
+			z = listCommand[7];
+
+			addAircraft(id, velX, velY, velZ, x, y, z);
+			cout << "Added aircraft!" << endl;
+			break;
+		case 2:
+			id = listCommand[1];
+			deleteAircraft(id);
+			cout << "Delete aircraft!" << endl;
+			break;
+		}
+	}
 }
 
-void Operator::timedInput(){
-	cout << "\nPlease enter the input:";
-	thread th(&Operator::read_value, this);
-	mutex mtx;
-	unique_lock<mutex> lck(mtx);
-	if(cv.wait_for(lck, chrono::seconds(5)) == cv_status::timeout){
-		cout << "\nTime-Out: 5 second:";
-		cout << "\nYou did not input NOOOOOOOB!";
-	}
-	cout << "\nYou entered: " << choice << '\n';
-
-	th.join();
-}*/
-
 void Operator::update(){
-	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
+	//AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
 	//cout<<"operator thread"<<endl;
-	checkViolations(180.0);
+	//checkViolations(180.0);
+	string command;
+	getline(cin, command);
+	executeCommand(command);
 	//timedInput();
-	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
+	//AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexUnlock();
+
 }

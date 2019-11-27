@@ -88,6 +88,16 @@ void Airspace::removeFromAirspace(){
 	}
 }
 
+void Airspace::deleteAircraft(int id){
+	int counter = 0;
+	for(Aircraft* aircraft : current_aircrafts){
+		if(id == aircraft->getId()){
+			current_aircrafts.erase(current_aircrafts.begin() + counter);
+		}
+		counter++;
+	}
+}
+
 void Airspace::update(){
 	AirspaceControlSimulator::getAirspaceControlSimulator()->threadMutexLock();
 	//cout << "Airspace" << endl;

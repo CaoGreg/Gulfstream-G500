@@ -15,6 +15,8 @@
 #include <cstdlib>
 #include <math.h>
 #include <cmath>
+#include <sstream>
+//#include <conio.h>
 
 using namespace std;
 
@@ -35,7 +37,7 @@ public:
 	string getAircraftData(int aircraftId);
 	void setHoldingPatternAll(bool holdingPattern);
 	//operator requests
-	void addAircraft(int id, int x, int y, int z, int velX,int velY, int velZ);
+	void addAircraft(int id, int velX,int velY, int velZ, int x, int y, int z);
 	void deleteAircraft(int id);
 	//some vector getProjectedPosition(int id, double n); get projected postion funtion must make a vector class
 
@@ -43,10 +45,9 @@ public:
 	void update();
 
 	//computer commands
+	void executeCommand(string command);
 	void send(int id,string message);
 	void broadcast(string message);
-	void read_value();
-	void timedInput();
 
 	void setHitList(vector<Aircraft*> hits);
 

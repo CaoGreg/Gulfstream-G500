@@ -16,9 +16,16 @@ class TrackFile{
 		static void createInstance(){ trackfile = new TrackFile(); }
 		static TrackFile* getTrackFile(){ return trackfile;	}
 		void update();
+		void clearHistory();
+		string getHistory();
+		void setHits(vector<Aircraft*> hits);
+		vector<Aircraft*> getHits(){ return this->hits; }
 
 	private:
 		static TrackFile* trackfile;
+		string history = "";
+		vector<Aircraft*> hits;
+
 };
 
 #endif /*TRACKFILE_H_*/

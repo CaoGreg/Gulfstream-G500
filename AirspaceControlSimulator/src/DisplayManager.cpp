@@ -23,8 +23,8 @@ void DisplayManager::update(){
 		//cout << "The timer when entered display: ";
 		//cout << currentTime << endl;
 		cout << "Inside Airspace: " << endl;
-		for(unsigned int i = 0; i < Airspace::getAirspace()->getCurrentAircrafts().size(); i++){
-			cout << Airspace::getAirspace()->getCurrentAircrafts()[i]->print(2);
+		for(unsigned int i = 0; i < TrackFile::getTrackFile()->getHits().size(); i++){
+			cout << TrackFile::getTrackFile()->getHits()[i]->print(2);
 		}
 		cout << endl;
 		cout << "Potential constraint violations: " << endl;

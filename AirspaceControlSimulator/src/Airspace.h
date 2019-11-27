@@ -29,6 +29,8 @@ class Airspace
 		std::deque<Aircraft*> getIncomingAircrafts(){ return incoming_aircrafts; }
 		std::vector<Aircraft*> getLeftAircrafts(){ return left_aircrafts; }
 		void removeFromAirspace();
+		void addAircraft(Aircraft* aircraft){ this->current_aircrafts.push_back(aircraft); }
+		void deleteAircraft(int id);
 		double getMinZ(){ return this->minZ; }
 		double getMaxZ(){ return this->maxZ; }
 

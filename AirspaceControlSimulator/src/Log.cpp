@@ -8,19 +8,21 @@ Log::Log(){
 }
 
 void Log::writeLog(){
-	string line;
-	string trackFile;
-	ifstream iTrackFile ("Track.txt", ios::in);
-	while(iTrackFile){
-		getline(iTrackFile, line);
-		trackFile += line + "\n";
-	}
-	iTrackFile.close();
-	ofstream oTrackFile ("Track.txt", ios::out|ios::trunc);
-	oTrackFile.close();
+	//string line;
+//	string trackFile;
+//	ifstream iTrackFile ("Track.txt", ios::in);
+//	while(iTrackFile){
+//		getline(iTrackFile, line);
+//		trackFile += line + "\n";
+//	}
+//	iTrackFile.close();
+	//ofstream oTrackFile ("Track.txt", ios::out|ios::trunc);
+//	oTrackFile.close();
 	ofstream oLogFile ("Log.txt", ios::out|ios::app);
-	oLogFile << trackFile;
+	oLogFile << TrackFile::getTrackFile()->getHistory();
 	oLogFile.close();
+
+	TrackFile::getTrackFile()->clearHistory();
 
 	//	itrackFile.close();
 	/*oLogFile << "Current time: " << Timer::getTimer()->getCurrentTime() << endl;
