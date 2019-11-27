@@ -19,6 +19,7 @@ public:
 	void setVelocityX(double x);
 	void setVelocityY(double y);
 	void setVelocityZ(double z);
+	void changeAltitude(double change);
 	bool isHolding();
 	void hold(double radius);
 	void stopHolding();

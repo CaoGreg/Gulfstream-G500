@@ -113,6 +113,10 @@ void Aircraft::setLeftTime(double time){
 	this->lefttime = time;
 }
 
+void Aircraft::changeAltitude(double change){
+	this->z += change;
+}
+
 string Aircraft::print(int choice){
 	string aircraft;
 	switch(choice){

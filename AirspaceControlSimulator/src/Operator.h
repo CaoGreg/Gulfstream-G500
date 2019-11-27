@@ -29,7 +29,7 @@ public:
 	static Operator* getOperator(){ return operater; }
 
 	//commands for a given aircraft
-	void setAltitude(int aircraftId, double elevationChange);
+	void changeAltitude(int aircraftId, double elevationChange);
 	void setVelocity(int aircraftId, double velX, double velY, double velZ);
 	void setDirection(int aircraftId,double x, double y, double z);
 	void setHoldingPattern(int aircraftId, bool holdingPattern);

@@ -16,17 +16,23 @@ void Operator::setHitList(vector<Aircraft*> aircraftHits){
 	this->hitsList = aircraftHits;
 }
 
-void Operator::setAltitude(int aircraftId, double altitude){
+void Operator::changeAltitude(int aircraftId, double altitude){
 	//update the altitude when the id matches
-	Airspace* airspace = Airspace::getAirspace();
-	for(Aircraft* aircraft : hitsList){
-		if(aircraft->getId() == aircraftId && (altitude <= airspace->getMaxZ() && altitude >= airspace->getMinZ())){
-			aircraft->setPositionZ(altitude);
+	if(aircraftId <= -1){
+		cout << "You cannot modify an unknown aircraft!" << endl;
+	}else{
+		bool found = false;
+		for(Aircraft* aircraft : hitsList){
+			if(aircraft->getId() == aircraftId /*&& (altitude <= airspace->getMaxZ() && altitude >= airspace->getMinZ())*/){
+				aircraft->changeAltitude(altitude);
+				cout << "Altitude changes sent to aircraft id " << to_string(aircraftId) << endl;
+				found = true;
+			}
+		}
+		if(!found){
+			cout << "Aircraft id" << to_string(aircraftId) << " not found" << endl;
 		}
 	}
-	//update the altitude in the hits list
-	airspace->setCurrentAircrafts(hitsList);
-	delete airspace;
 }
 
 void Operator::setVelocity(int aircraftId,double velX, double velY, double velZ){
@@ -77,7 +83,7 @@ string Operator::getAircraftData(int aircraftId){
 		}
 	}
 	if(info.compare("") == 0){
-		info = "Could not find the specified plane ID";
+		info = "Could not find the specified plane ID\n";
 	}
 	return info;
 }
@@ -182,7 +188,7 @@ bool Operator::hasCollisions(Aircraft* aircraft1, Aircraft* aircraft2, double pr
 
 /* Commands: 1 = add aircraft (id velx vely velz x y z)
  * 			 2 = delete (id)
- * 			 3 = set altitude (id elevation change)
+ * 			 3 = change altitude (id elevation change)
  * 			 4 = set velocity (id velx vely velz)
  * 			 5 = set direction (id x y z)
  * 			 6 = getAircraftData (id)
@@ -220,10 +226,30 @@ void Operator::executeCommand(string command){
 			id = listCommand[1];
 			deleteAircraft(id);
 			break;
+		case 3:
+			id = listCommand[1];
+			changeAltitude(id, listCommand[2]);
+			break;
+		case 4:
+			//TODO set velocity
+			break;
+		case 5:
+			//TODO set direction
+			break;
+		case 6:
+			id = listCommand[1];
+			cout << getAircraftData(id);
+			break;
+		case 7:
+			//TODO set holding partern
+			break;
+		case 8:
+			//TODO project into future
+			break;
 		case 9:
 			cout << "Commands: 1 = add aircraft (id velx vely velz x y z)" << endl
 			<< "	  2 = delete aircraft (id)" << endl
-			<<	"	  3 = set altitude (id elevation change)" << endl
+			<<	"	  3 = change altitude (id elevation change)" << endl
 			<<	"	  4 = set velocity (id velx vely velz)" << endl
 			<<	"          5 = set direction (id x y z)" << endl
 			<<	"	  6 = getAircraftData (id)" << endl
