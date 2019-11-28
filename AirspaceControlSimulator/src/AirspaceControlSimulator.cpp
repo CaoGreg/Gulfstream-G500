@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 	//Task to update the radar
 	Task radarTask;
 	radarTask.priority = 250;
-	radarTask.period = 10000000000; //15sec
+	radarTask.period = 15000000000; //15sec
 	radarTask.func = []() {
 		Radar::getRadar()->update();
 	};
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 	//Task to update the log
 	Task logTask;
 	logTask.priority = 249;
-	logTask.period = 15000000000; //60sec
+	logTask.period = 60000000000; //60sec
 	logTask.func = []() {
 		Log::getLog()->update();
 	};
